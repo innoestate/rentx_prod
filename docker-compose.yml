@@ -18,7 +18,7 @@ services:
   nestjs:
     container_name: back
     image: node:20-alpine  # Use the official Node 20 image
-    working_dir: /app  # Set working directory
+    working_dir: /usr/src/app  # Set working directory
     volumes:
       - ./back:/usr/src/app  # Mount the current directory
     environment:
