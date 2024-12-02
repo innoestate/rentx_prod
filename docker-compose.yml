@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - my-network
+      - rentx_prod_network
     volumes:
       - pg_data:/var/lib/postgresql/data
 
@@ -33,7 +33,7 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - my-network
+      - rentx_prod_network
     depends_on:
       - postgres 
     restart: always
@@ -57,10 +57,11 @@ services:
       - angular
     restart: unless-stopped
     networks:
+      - rentx_prod_network
 
 volumes:
   pg_data:
   
 networks:
-  my-network:
+  rentx_prod_network:
     driver: bridge
