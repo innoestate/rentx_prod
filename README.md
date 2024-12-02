@@ -32,3 +32,7 @@ Copy envs files:
 sudo scp -i "prod_rentx.pem" ../.env admin@ec2-13-36-119-43.eu-west-3.compute.amazonaws.com:/home/admin/rentx/.env
 
 sudo sudo scp -i "prod_rentx.pem" ../nestjs/.env.production admin@ec2-13-36-119-43.eu-west-3.compute.amazonaws.com:/home/admin/rentx/nestjs/.env.production
+
+run 
+
+docker-compose up -d --build

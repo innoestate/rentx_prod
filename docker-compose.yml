@@ -1,3 +1,5 @@
+version: '3.8'  # Specify the version of the docker-compose file
+
 services:
   postgres:
     image: postgres:13-alpine
@@ -9,16 +11,16 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - rentx_prod_network
+      - my-network
     volumes:
       - pg_data:/var/lib/postgresql/data
 
   nestjs:
     container_name: back
-    image: node:20-alpine # Use the official Node 14 image
+    image: node:20-alpine  # Use the official Node 20 image
     working_dir: /app  # Set working directory
     volumes:
-      - .:/usr/src/app  # Mount the current direc
+      - .:/usr/src/app  # Mount the current directory
     environment:
       NODE_ENV: production
       DB_HOST: ${DB_HOST}
@@ -33,7 +35,7 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - rentx_prod_network
+      - my-network
     depends_on:
       - postgres 
     restart: always
@@ -52,16 +54,15 @@ services:
       - ./front:/var/www/rentx.fr
       - /etc/letsencrypt/live/rentx.fr/fullchain.pem:/etc/letsencrypt/live/rentx.fr/fullchain.pem
       - /etc/letsencrypt/live/rentx.fr/privkey.pem:/etc/letsencrypt/live/rentx.fr/privkey.pem
-
     depends_on:
-      - angular
+      - nestjs  # Adjust to depend on the backend service
     restart: unless-stopped
     networks:
-      - rentx_prod_network
+      - my-network  # Specify the network properly
 
 volumes:
   pg_data:
-  
+
 networks:
-  rentx_prod_network:
+  my-network:
     driver: bridge
