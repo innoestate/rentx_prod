@@ -20,7 +20,7 @@ services:
     image: node:20-alpine  # Use the official Node 20 image
     working_dir: /app  # Set working directory
     volumes:
-      - .:/usr/src/app  # Mount the current directory
+      - ./back:/usr/src/app  # Mount the current directory
     environment:
       NODE_ENV: production
       DB_HOST: ${DB_HOST}
