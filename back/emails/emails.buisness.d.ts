@@ -1,0 +1,1 @@
+export declare const sendEmail: (accessToken: string, refreshToken: string, email: string, clientId: string, clientSecret: string) => import("rxjs").Observable<import("gaxios").GaxiosResponse<import("googleapis").gmail_v1.Schema$Message>>;

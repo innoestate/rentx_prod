@@ -11,7 +11,7 @@ run npm run build
 
 go in nesjs folder
 
-run npm run build
+run npm run build-prod
 
 copy .en.production from nestjs folder to here back folder
 
@@ -27,12 +27,16 @@ sudo git clone https://github.com/innoestate/rentx_prod.git
 
 sudo chmod -R 777 rentx_prod
 
-Copy envs files:
+Copy envs files from local to the instance:
 
 sudo scp -i "prod_rentx.pem" ../.env admin@ec2-13-36-119-43.eu-west-3.compute.amazonaws.com:/home/admin/rentx/.env
 
 sudo sudo scp -i "prod_rentx.pem" ../nestjs/.env.production admin@ec2-13-36-119-43.eu-west-3.compute.amazonaws.com:/home/admin/rentx/nestjs/.env.production
 
-run 
+run:
 
 docker-compose up -d --build
+
+sudo docker exec -ti back sh
+
+npm run typeorm migration:run
