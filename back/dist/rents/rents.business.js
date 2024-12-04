@@ -3,10 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.calculateRent = exports.createRentReceiptEmail = exports.createRentReciptPdf = void 0;
 const fs = require("fs");
 const pdfkit = require("pdfkit");
+const path = require('path');
 const rxjs_1 = require("rxjs");
 const createRentReciptPdf = async (estate, owner, lodger, startDate_, endDate_) => {
     return new Promise((resolve, reject) => {
         try {
+            const fontPath = path.join(__dirname, '../assets/fonts/times_bold.ttf');
             const doc = initDoc();
             runStream(doc, null, document => resolve(document));
             const { startDate, endDate, rent, charges, totalRent, street, zipAndCity, madeAt, signature } = getRentReceiptInfos(estate, owner, lodger, startDate_, endDate_);
@@ -24,14 +26,14 @@ const createRentReciptPdf = async (estate, owner, lodger, startDate_, endDate_) 
             doc.text(street, 0, y += textHeight, { align: 'right' });
             doc.text(zipAndCity, 0, y += textHeight, { align: 'right' });
             y += textHeight * 4;
-            doc.font('src/assets/fonts/times_bold.ttf').text('QUITTANCE DE LOYER', marginLeft, y += textHeight, { underline: true, align: 'center' });
+            doc.font(fontPath).text('QUITTANCE DE LOYER', marginLeft, y += textHeight, { underline: true, align: 'center' });
             doc.font('Times-Roman').text(`Période: du ${formatDateFromISOString(startDate.toISOString())} au ${formatDateFromISOString(endDate.toISOString())}`, marginLeft, y += textHeight * 1.5, { align: 'center' });
             doc.text(street + ' ' + zipAndCity, marginLeft, y += textHeight, { align: 'center' });
             let tabTop = y + textHeight * 2;
             doc.moveTo(marginLeft, y += textHeight * 2)
                 .lineTo(pageWidth - marginLeft, y)
                 .stroke();
-            doc.font('src/assets/fonts/times_bold.ttf').text('PROPRIETAIRE:', marginLeft + padding, y += textHeight * 0.5 + padding);
+            doc.font(fontPath).text('PROPRIETAIRE:', marginLeft + padding, y += textHeight * 0.5 + padding);
             doc.text('LOCATAIRE:', tabCenter + padding, y);
             doc.font('Times-Roman').text(owner.name, marginLeft + padding, y += textHeight);
             doc.text(lodger.name, tabCenter + padding, y);
@@ -48,7 +50,7 @@ const createRentReciptPdf = async (estate, owner, lodger, startDate_, endDate_) 
             doc.moveTo(marginLeft, y += textHeight + padding)
                 .lineTo(pageWidth - marginLeft, y)
                 .stroke();
-            doc.font('src/assets/fonts/times_bold.ttf').text('Total', marginLeft + padding, y += textHeight * 0.5 + padding);
+            doc.font(fontPath).text('Total', marginLeft + padding, y += textHeight * 0.5 + padding);
             doc.font('Times-Roman').text(totalRent + ' €', tabCenter + padding, y);
             doc.moveTo(marginLeft, y += textHeight + padding)
                 .lineTo(pageWidth - marginLeft, y)

@@ -7,7 +7,6 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "build:prod": "tsc -p tsconfig.prod.json && cp ./package.json ../../rentx_prod/back/ && cp .env.production dist/.env.production",
     "build-prod": "nest build && cp -r dist ../../rentx_prod/back/ && ./.env.production ../../rentx_prod/back/dist/ && cp package.json ../../rentx_prod/back/",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
