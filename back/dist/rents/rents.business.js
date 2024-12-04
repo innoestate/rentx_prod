@@ -11,7 +11,7 @@ const createRentReciptPdf = async (estate, owner, lodger, startDate_, endDate_) 
             const fontPath = path.join(__dirname, '../assets/fonts/times_bold.ttf');
             const doc = initDoc();
             runStream(doc, null, document => resolve(document));
-            const { startDate, endDate, rent, charges, totalRent, street, zipAndCity, madeAt, signature } = getRentReceiptInfos(estate, owner, lodger, startDate_, endDate_);
+            const { startDate, endDate, rent, charges, totalRent, street, ownerZipAndCity, lodgerZipAndCity, madeAt, signature } = getRentReceiptInfos(estate, owner, lodger, startDate_, endDate_);
             const pageWidth = doc.page.width;
             const marginLeft = 50;
             const textHeight = 15;
@@ -20,15 +20,15 @@ const createRentReciptPdf = async (estate, owner, lodger, startDate_, endDate_) 
             let y = 50;
             doc.text(owner.name, marginLeft, y);
             doc.text(owner.street, marginLeft, y += textHeight);
-            doc.text(owner.city, marginLeft, y += textHeight);
+            doc.text(ownerZipAndCity, marginLeft, y += textHeight);
             y = 50;
             doc.text(lodger.name, 0, y, { align: 'right' });
             doc.text(street, 0, y += textHeight, { align: 'right' });
-            doc.text(zipAndCity, 0, y += textHeight, { align: 'right' });
+            doc.text(lodgerZipAndCity, 0, y += textHeight, { align: 'right' });
             y += textHeight * 4;
             doc.font(fontPath).text('QUITTANCE DE LOYER', marginLeft, y += textHeight, { underline: true, align: 'center' });
             doc.font('Times-Roman').text(`Période: du ${formatDateFromISOString(startDate.toISOString())} au ${formatDateFromISOString(endDate.toISOString())}`, marginLeft, y += textHeight * 1.5, { align: 'center' });
-            doc.text(street + ' ' + zipAndCity, marginLeft, y += textHeight, { align: 'center' });
+            doc.text(street + ' ' + lodgerZipAndCity, marginLeft, y += textHeight, { align: 'center' });
             let tabTop = y + textHeight * 2;
             doc.moveTo(marginLeft, y += textHeight * 2)
                 .lineTo(pageWidth - marginLeft, y)
@@ -96,18 +96,19 @@ const getRentReceiptInfos = (estate, owner, lodger, startDate_, endDate_) => {
     const charges = estate.charges;
     const totalRent = (0, exports.calculateRent)(rent, charges, startDate, endDate);
     const street = estate.street;
-    const zipAndCity = estate.zip + ' ' + estate.city;
+    const lodgerZipAndCity = estate.zip + ' ' + estate.city;
+    const ownerZipAndCity = owner.zip + ' ' + owner.city;
     const madeAt = estate.city;
     const signature = owner.signature;
     if (!endDate) {
         endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
     }
-    return { startDate, endDate, rent, charges, totalRent, street, zipAndCity, madeAt, signature };
+    return { startDate, endDate, rent, charges, totalRent, street, lodgerZipAndCity, ownerZipAndCity, madeAt, signature };
 };
 const createRentReceiptEmail = (owners, lodgers, estate, startDate_, endDate_) => {
     const owner = owners.find(owner => owner.id === estate.owner_id);
     const lodger = lodgers.find(lodger => lodger.id === estate.lodger_id);
-    const { startDate, endDate, rent, charges, totalRent, street, zipAndCity, madeAt } = getRentReceiptInfos(estate, owner, lodger);
+    const { startDate, endDate, street } = getRentReceiptInfos(estate, owner, lodger);
     return (0, rxjs_1.from)((0, exports.createRentReciptPdf)(estate, owner, lodger, startDate_, endDate_)).pipe((0, rxjs_1.map)(rentReceipt => {
         const content = `Bonjour,
 
