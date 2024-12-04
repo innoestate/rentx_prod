@@ -1,1 +1,1 @@
-{"version":3,"file":"estate-db.model.js","sourceRoot":"","sources":["../../../../rentx_nestjs-angular/nestjs/src/estates/estate-db.model.ts"],"names":[],"mappings":""}
+{"version":3,"file":"estate-db.model.js","sourceRoot":"","sources":["../../src/estates/estate-db.model.ts"],"names":[],"mappings":""}

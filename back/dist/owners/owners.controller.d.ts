@@ -1,4 +1,4 @@
-import { Estate_Dto } from 'src/estates/estate-dto.model';
+import { Estate_Dto } from '../estates/estate-dto.model';
 import { Owner_Dto } from './owners-dto.model';
 import { OwnersService } from './owners.service';
 export declare class OwnerController {
