@@ -21,7 +21,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "removedb": "node src/tests/utils/db.utils.js",
-    "typeorm": "npm run build && npx typeorm -d .data-source.config.js",
+    "typeorm": "npx typeorm -d .data-source.config.js",
     "migration:generate": "typeorm -- migration:generate",
     "migration:run": "typeorm -- migration:run",
     "migration:revert": "typeorm -- migration:revert"
