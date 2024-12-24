@@ -1,0 +1,105 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const rents_utils_1 = require("../../rents.utils");
+const estates_mocks_1 = require("../../tests/estates.mocks");
+const rents_mocks_1 = require("../../tests/rents.mocks");
+const rents_spreadsheets_business_1 = require("../rents.spreadsheets.business");
+const spreadsheets_mocked_strategy_1 = require("../strategies/spreadsheets.mocked.strategy");
+const spreadsheets_utils_1 = require("../spreadsheets.utils");
+describe('updating spreadsheet after building context', () => {
+    let mockedGoogleWorker;
+    let spreadSheetId;
+    it('build a spreadsheet and update a rent', async () => {
+        mockedGoogleWorker = new spreadsheets_mocked_strategy_1.MockedGoogleSpreadSheetStrategy();
+        const { spreadSheet } = await (0, rents_spreadsheets_business_1.buildSpreadsheetContext)(mockedGoogleWorker, null, [{ ...estates_mocks_1.estate1 }], new Date('2024-02-01'), new Date('2024-02-29'));
+        const sheetsUpdates = (0, spreadsheets_utils_1.getSpreadSheetRentsCells)(spreadSheet, [{ ...rents_mocks_1.rent2024_02 }], [{ ...estates_mocks_1.estate1 }]);
+        expect(sheetsUpdates[0].sheetTitle).toEqual('2024');
+        expect(sheetsUpdates[0].cell).toEqual('G2');
+        expect(sheetsUpdates[0].value).toEqual(1100);
+        expect(sheetsUpdates[0].backgroundColor).toEqual('#00FF00');
+        spreadSheetId = spreadSheet.id;
+    });
+    it('build a spreadsheet and update 2 rents', async () => {
+        mockedGoogleWorker = new spreadsheets_mocked_strategy_1.MockedGoogleSpreadSheetStrategy();
+        const { startDate, endDate } = (0, rents_utils_1.getStartAndEnDatesFromRents)([{ ...rents_mocks_1.rent2024_02 }, { ...rents_mocks_1.rent2024_03 }]);
+        const { spreadSheet } = await (0, rents_spreadsheets_business_1.buildSpreadsheetContext)(mockedGoogleWorker, null, [{ ...estates_mocks_1.estate1 }], startDate, endDate);
+        const sheetsUpdates = (0, spreadsheets_utils_1.getSpreadSheetRentsCells)(spreadSheet, [{ ...rents_mocks_1.rent2024_02 }, { ...rents_mocks_1.rent2024_03 }], [{ ...estates_mocks_1.estate1 }]);
+        expect(sheetsUpdates[0].sheetTitle).toEqual('2024');
+        expect(sheetsUpdates[0].cell).toEqual('G2');
+        expect(sheetsUpdates[0].value).toEqual(1100);
+        expect(sheetsUpdates[0].backgroundColor).toEqual('#00FF00');
+        expect(sheetsUpdates[1].sheetTitle).toEqual('2024');
+        expect(sheetsUpdates[1].cell).toEqual('H2');
+        expect(sheetsUpdates[1].value).toEqual(1100);
+        spreadSheetId = spreadSheet.id;
+    });
+    it('build a spreadsheet and update 3 rents', async () => {
+        mockedGoogleWorker = new spreadsheets_mocked_strategy_1.MockedGoogleSpreadSheetStrategy();
+        const { startDate, endDate } = (0, rents_utils_1.getStartAndEnDatesFromRents)([{ ...rents_mocks_1.rent2024_02 }, { ...rents_mocks_1.rent2024_03 }, { ...rents_mocks_1.rent2024_04 }]);
+        const { spreadSheet } = await (0, rents_spreadsheets_business_1.buildSpreadsheetContext)(mockedGoogleWorker, null, [{ ...estates_mocks_1.estate1 }], startDate, endDate);
+        const sheetsUpdates = (0, spreadsheets_utils_1.getSpreadSheetRentsCells)(spreadSheet, [{ ...rents_mocks_1.rent2024_02 }, { ...rents_mocks_1.rent2024_03 }, { ...rents_mocks_1.rent2024_04 }], [{ ...estates_mocks_1.estate1 }]);
+        expect(sheetsUpdates[0].sheetTitle).toEqual('2024');
+        expect(sheetsUpdates[0].cell).toEqual('G2');
+        expect(sheetsUpdates[0].value).toEqual(1100);
+        expect(sheetsUpdates[0].backgroundColor).toEqual('#00FF00');
+        expect(sheetsUpdates[1].sheetTitle).toEqual('2024');
+        expect(sheetsUpdates[1].cell).toEqual('H2');
+        expect(sheetsUpdates[1].value).toEqual(1100);
+        expect(sheetsUpdates[1].sheetTitle).toEqual('2024');
+        expect(sheetsUpdates[2].cell).toEqual('I2');
+        expect(sheetsUpdates[2].value).toEqual(1100);
+        spreadSheetId = spreadSheet.id;
+    });
+    it('build a spreadsheet and update 2 rents in 2 differents estates', async () => {
+        mockedGoogleWorker = new spreadsheets_mocked_strategy_1.MockedGoogleSpreadSheetStrategy();
+        const rents = [{ ...rents_mocks_1.rent2024_02, estate_id: '1' }, { ...rents_mocks_1.rent2024_02, estate_id: '2' }];
+        const estates = [{ ...estates_mocks_1.estate1 }, { ...estates_mocks_1.estate2 }];
+        const { startDate, endDate } = (0, rents_utils_1.getStartAndEnDatesFromRents)(rents);
+        const { spreadSheet } = await (0, rents_spreadsheets_business_1.buildSpreadsheetContext)(mockedGoogleWorker, null, [...estates], startDate, endDate);
+        const sheetsCells = (0, spreadsheets_utils_1.getSpreadSheetRentsCells)(spreadSheet, rents, [...estates]);
+        expect(sheetsCells.length).toEqual(2);
+        expect(sheetsCells[0].cell).toEqual('G2');
+        expect(sheetsCells[1].cell).toEqual('G3');
+    });
+    it('build a spreadsheet and update 2 rents from different years', async () => {
+        mockedGoogleWorker = new spreadsheets_mocked_strategy_1.MockedGoogleSpreadSheetStrategy();
+        const rents = [{ ...rents_mocks_1.rent2021_01 }, { ...rents_mocks_1.rent2024_02 }];
+        const estates = [{ ...estates_mocks_1.estate1 }];
+        const { startDate, endDate } = (0, rents_utils_1.getStartAndEnDatesFromRents)(rents);
+        const { spreadSheet } = await (0, rents_spreadsheets_business_1.buildSpreadsheetContext)(mockedGoogleWorker, null, [...estates], startDate, endDate);
+        const sheetsCells = (0, spreadsheets_utils_1.getSpreadSheetRentsCells)(spreadSheet, rents, [...estates]);
+        expect(sheetsCells.length).toEqual(2);
+        expect(sheetsCells[0].cell).toEqual('F2');
+        expect(sheetsCells[0].sheetTitle).toEqual('2021');
+        expect(sheetsCells[1].cell).toEqual('G2');
+        expect(sheetsCells[1].sheetTitle).toEqual('2024');
+    });
+    it('build a spreadsheet and update 3 rents from different years in differents estates', async () => {
+        mockedGoogleWorker = new spreadsheets_mocked_strategy_1.MockedGoogleSpreadSheetStrategy();
+        const rents = [{ ...rents_mocks_1.rent2021_01 }, { ...rents_mocks_1.rent2024_02, estate_id: '2' }, { ...rents_mocks_1.rent2020_12 }];
+        const estates = [{ ...estates_mocks_1.estate1 }, { ...estates_mocks_1.estate2 }];
+        const { startDate, endDate } = (0, rents_utils_1.getStartAndEnDatesFromRents)(rents);
+        const { spreadSheet } = await (0, rents_spreadsheets_business_1.buildSpreadsheetContext)(mockedGoogleWorker, null, [...estates], startDate, endDate);
+        const sheetsCells = (0, spreadsheets_utils_1.getSpreadSheetRentsCells)(spreadSheet, rents, [...estates]);
+        expect(sheetsCells.length).toEqual(3);
+        expect(sheetsCells[0].cell).toEqual('Q2');
+        expect(sheetsCells[0].sheetTitle).toEqual('2020');
+        expect(sheetsCells[1].cell).toEqual('F2');
+        expect(sheetsCells[1].sheetTitle).toEqual('2021');
+        expect(sheetsCells[2].cell).toEqual('G3');
+        expect(sheetsCells[2].sheetTitle).toEqual('2024');
+        expect(sheetsCells[2].value).toEqual(1100);
+    });
+    it('build a spreadsheet and update 1 rent excluding one rent out of scope', async () => {
+        mockedGoogleWorker = new spreadsheets_mocked_strategy_1.MockedGoogleSpreadSheetStrategy();
+        const rents = [{ ...rents_mocks_1.rent2021_01 }, { ...rents_mocks_1.rent2024_02, estate_id: 'OutOfScope' }];
+        const estates = [{ ...estates_mocks_1.estate1 }];
+        const { startDate, endDate } = (0, rents_utils_1.getStartAndEnDatesFromRents)(rents);
+        const { spreadSheet } = await (0, rents_spreadsheets_business_1.buildSpreadsheetContext)(mockedGoogleWorker, null, [...estates], startDate, endDate);
+        const sheetsCells = (0, spreadsheets_utils_1.getSpreadSheetRentsCells)(spreadSheet, rents, [...estates]);
+        expect(sheetsCells.length).toEqual(1);
+        expect(sheetsCells[0].cell).toEqual('F2');
+        expect(sheetsCells[0].sheetTitle).toEqual('2021');
+    });
+});
+//# sourceMappingURL=rents.spreadsheets.get-rents.spec.js.map
