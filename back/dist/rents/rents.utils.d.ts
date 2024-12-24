@@ -1,4 +1,4 @@
-import { Estate_filled_Db } from "../estates/estate-filled-db.model";
+import { Estate_filled_Db } from "src/estates/estate-filled-db.model";
 import { Rent_Db } from "./rents.db";
 import { MonthlyRents } from "./monlthy-rent.model";
 export declare const getRentsByMonth: (fusionnedRents: Rent_Db[], rentsFromDb?: Rent_Db[]) => MonthlyRents[];

@@ -1,4 +1,4 @@
-import { Estate_filled_Db } from "../../estates/estate-filled-db.model";
+import { Estate_filled_Db } from "src/estates/estate-filled-db.model";
 import { Sheet, SpreadSheet, SpreadSheetUpdate } from "./models/spreadsheets.model";
 import { Rent_Db } from "../rents.db";
 export declare const getSpreadSheetRentsCells: (spreadSheetContext: SpreadSheet, rents: Rent_Db[], estates: Estate_filled_Db[]) => SpreadSheetUpdate[];

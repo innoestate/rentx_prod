@@ -1,7 +1,7 @@
 import { Estate_Db } from '../../estates/estate-db.model';
 import { Lodger_Db } from '../../lodgers/lodger-db.model';
 import { Owner_Db } from '../../owners/owners-db.model';
-import { Estate_filled_Db } from '../../estates/estate-filled-db.model';
+import { Estate_filled_Db } from 'src/estates/estate-filled-db.model';
 export declare const createRentReciptPdf: (estate: Estate_Db, owner: Owner_Db, lodger: Lodger_Db, startDate_?: string, endDate_?: string) => Promise<unknown>;
 export declare const getRentReceiptInfos: (estate: Estate_Db, owner: Owner_Db, lodger: Lodger_Db, startDate_?: string, endDate_?: string) => {
     startDate: Date;
