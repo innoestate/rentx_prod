@@ -40,6 +40,21 @@ services:
       - postgres 
     restart: always
 
+  prospector_api:
+    build:
+      context: ./prospector_api
+      dockerfile: Dockerfile
+    container_name: prospector_api
+    environment:
+      # Add any environment variables required by prospector_api
+    ports:
+      - "4000:4000"  # Adjust the port as necessary
+    networks:
+      - my-network
+    depends_on:
+      - postgres
+    restart: always
+
   nginx:
     container_name: nginx
     image: nginx:stable-alpine3.20-perl
@@ -55,7 +70,8 @@ services:
       - /etc/letsencrypt/live/rentx.fr/fullchain.pem:/etc/letsencrypt/live/rentx.fr/fullchain.pem
       - /etc/letsencrypt/live/rentx.fr/privkey.pem:/etc/letsencrypt/live/rentx.fr/privkey.pem
     depends_on:
-      - nestjs  # Adjust to depend on the backend service
+      - nestjs
+      - prospector_api
     restart: unless-stopped
     networks:
       - my-network  # Specify the network properly
