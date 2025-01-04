@@ -46,7 +46,15 @@ services:
       dockerfile: Dockerfile
     container_name: prospector_api
     environment:
-      # Add any environment variables required by prospector_api
+      NODE_ENV: production
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      JWT_SECRET: ${JWT_SECRET}
     ports:
       - "4000:4000"  # Adjust the port as necessary
     networks:
