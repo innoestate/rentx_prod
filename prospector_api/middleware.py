@@ -5,7 +5,7 @@ from auth import verify_jwt_token
 security = HTTPBearer()
 
 async def jwt_middleware(request: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
-    token = credentials.credentials
+    token = str(credentials.credentials)
     try:
         data = verify_jwt_token(token)
         request.state.user_data = data

@@ -19,6 +19,7 @@ def create_jwt_token(data: dict) -> str:
 
 def verify_jwt_token(token: str) -> dict:
     try:
+        print('secret', JWT_SECRET)
         payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
         return payload.get('data', payload)  # Return the entire payload if 'data' is not present
     except jwt.ExpiredSignatureError:
