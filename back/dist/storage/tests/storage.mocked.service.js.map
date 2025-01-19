@@ -1,0 +1,1 @@
+{"version":3,"file":"storage.mocked.service.js","sourceRoot":"","sources":["../../../src/storage/tests/storage.mocked.service.ts"],"names":[],"mappings":";;;;;;;;;AAAA,2CAA4C;AAC5C,iEAA6D;AAC7D,2FAAuF;AAGhF,IAAM,oBAAoB,GAA1B,MAAM,oBAAqB,SAAQ,gCAAc;IAAjD;;QAEa,mBAAc,GAAG,IAAI,0DAA2B,EAAE,CAAA;IAEtE,CAAC;CAAA,CAAA;AAJY,oDAAoB;+BAApB,oBAAoB;IADhC,IAAA,mBAAU,GAAE;GACA,oBAAoB,CAIhC"}
