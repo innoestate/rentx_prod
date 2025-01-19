@@ -56,6 +56,7 @@ services:
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       JWT_SECRET: ${JWT_SECRET}
       RENTX_API_URL: ${RENTX_API_URL}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
     ports:
       - "4000:4000"  # Adjust the port as necessary
     networks:
