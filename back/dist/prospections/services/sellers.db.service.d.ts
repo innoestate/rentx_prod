@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
-import { Seller_Entity } from '../entities/seller.entity';
-import { SellerDto } from '../dto/create-seller.dto';
+import { Seller_Entity } from '../../sellers/models/seller.entity';
+import { SellerDto } from '../../sellers/models/create-seller.dto';
 export declare class SellersDbService {
     private sellerRepository;
     constructor(sellerRepository: Repository<Seller_Entity>);

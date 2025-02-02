@@ -48,7 +48,6 @@ let ProspectionsDbService = class ProspectionsDbService {
     }
     async updateMany(user_id, updateProspectionDto) {
         try {
-            console.log('update many', user_id, updateProspectionDto);
             return this.prospectionRepository.update({ user_id }, updateProspectionDto);
         }
         catch (e) {

@@ -19,18 +19,17 @@ const rxjs_1 = require("rxjs");
 const auth_guard_1 = require("../auth/auth.guard");
 const user_midleweare_guard_1 = require("../guards/user-midleweare.guard");
 const prospections_utils_1 = require("./prospections.utils");
-const prospections_db_service_1 = require("./services/prospections.db.service");
 const prospections_service_1 = require("./services/prospections.service");
 const sellers_db_service_1 = require("./services/sellers.db.service");
+const spreadsheets_prospections_service_1 = require("./spreadsheets/services/spreadsheets.prospections.service");
 let ProspectionsController = class ProspectionsController {
-    constructor(prospectionService, prospectionsDbService, sellersService, configService) {
+    constructor(prospectionService, spreadSheetService, sellersService, configService) {
         this.prospectionService = prospectionService;
-        this.prospectionsDbService = prospectionsDbService;
+        this.spreadSheetService = spreadSheetService;
         this.sellersService = sellersService;
         this.configService = configService;
     }
     create(createProspectionDto, req) {
-        console.log('create prospection route called');
         const prospection = (0, prospections_utils_1.formatProspectionDtoForCreation)(req.user?.id, createProspectionDto);
         return this.prospectionService.createNewProspection(prospection, req.user.accessToken, req.user.refresh_token, this.configService.get('GOOGLE_CLIENT_ID'), this.configService.get('GOOGLE_CLIENT_SECRET'));
     }
@@ -41,10 +40,10 @@ let ProspectionsController = class ProspectionsController {
         return this.prospectionService.findOne(id);
     }
     update(id, updateProspectionDto, req) {
-        return this.prospectionService.update(id, updateProspectionDto);
+        return this.prospectionService.update(id, updateProspectionDto, req.user.accessToken, req.user.refresh_token, this.configService.get('GOOGLE_CLIENT_ID'), this.configService.get('GOOGLE_CLIENT_SECRET'));
     }
     remove(id, req) {
-        return this.prospectionService.remove(id);
+        return this.prospectionService.remove(req.user?.id, id, req.user.accessToken, req.user.refresh_token, this.configService.get('GOOGLE_CLIENT_ID'), this.configService.get('GOOGLE_CLIENT_SECRET'));
     }
     createSeller(createSellerDto, req) {
         createSellerDto.user_id = req.user.id;
@@ -58,10 +57,12 @@ let ProspectionsController = class ProspectionsController {
     }
     updateSeller(id, updateSellerDto, req) {
         updateSellerDto.user_id = req.user.id;
-        return this.sellersService.updateSeller(id, updateSellerDto);
+        const response = this.sellersService.updateSeller(id, updateSellerDto);
+        this.spreadSheetService.synchronizeGoogleSheet(req.user?.id, id, req.user.accessToken, req.user.refresh_token, this.configService.get('GOOGLE_CLIENT_ID'));
+        return response;
     }
     removeSeller(id, req, res) {
-        return (0, rxjs_1.from)(this.sellersService.removeSeller(id)).pipe((0, rxjs_1.switchMap)(_ => this.prospectionService.updateMany(req.user?.id, { seller_id: null })), (0, rxjs_1.switchMap)(_ => (0, rxjs_1.of)(res.send({ statusCode: 200, body: 'seller ' + id + ' removed' }))));
+        return (0, rxjs_1.from)(this.sellersService.removeSeller(id)).pipe((0, rxjs_1.switchMap)(_ => this.prospectionService.updateMany(req.user?.id, { seller_id: null })), (0, rxjs_1.switchMap)(_ => (0, rxjs_1.of)(res.send({ statusCode: 200, body: 'seller ' + id + ' removed' }))), (0, rxjs_1.tap)(() => this.spreadSheetService.synchronizeGoogleSheet(req.user?.id, id, req.user.accessToken, req.user.refresh_token, this.configService.get('GOOGLE_CLIENT_ID'))));
     }
 };
 exports.ProspectionsController = ProspectionsController;
@@ -158,7 +159,7 @@ __decorate([
 exports.ProspectionsController = ProspectionsController = __decorate([
     (0, common_1.Controller)('api/prospections'),
     __metadata("design:paramtypes", [prospections_service_1.ProspectionsService,
-        prospections_db_service_1.ProspectionsDbService,
+        spreadsheets_prospections_service_1.SpreadSheetsProspectionsService,
         sellers_db_service_1.SellersDbService,
         config_1.ConfigService])
 ], ProspectionsController);

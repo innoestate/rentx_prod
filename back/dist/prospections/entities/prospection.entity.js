@@ -30,6 +30,10 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
+], Prospection_Entity.prototype, "zip", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
 ], Prospection_Entity.prototype, "city", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
@@ -80,7 +84,7 @@ __decorate([
     __metadata("design:type", String)
 ], Prospection_Entity.prototype, "storage_folder_id", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => offer_entity_1.Offer_Entity, offer => offer.prospection),
+    (0, typeorm_1.OneToMany)(() => offer_entity_1.Offer_Entity, offer => offer.prospection, { cascade: true }),
     __metadata("design:type", Array)
 ], Prospection_Entity.prototype, "offers", void 0);
 exports.Prospection_Entity = Prospection_Entity = __decorate([

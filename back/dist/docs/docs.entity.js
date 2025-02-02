@@ -23,9 +23,17 @@ __decorate([
     __metadata("design:type", String)
 ], Docs_Entity.prototype, "user_id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Docs_Entity.prototype, "rents_google_sheet_id", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], Docs_Entity.prototype, "prospections_google_sheet_id", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' }),
+    __metadata("design:type", typeorm_1.Timestamp)
+], Docs_Entity.prototype, "lastSynchronization", void 0);
 exports.Docs_Entity = Docs_Entity = __decorate([
     (0, typeorm_1.Entity)('docs'),
     (0, typeorm_1.Index)(['user_id'], { unique: true })

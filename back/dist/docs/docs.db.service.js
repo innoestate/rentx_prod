@@ -23,20 +23,50 @@ let DocsDbService = class DocsDbService {
         this.docsRepository = docsRepository;
     }
     create(docsDto) {
-        const docs = this.docsRepository.create(docsDto);
-        return (0, rxjs_1.from)(this.docsRepository.save(docs));
+        try {
+            const docs = this.docsRepository.create(docsDto);
+            return (0, rxjs_1.from)(this.docsRepository.save(docs));
+        }
+        catch (e) {
+            console.error('DocsDbService.create', e);
+            return null;
+        }
     }
     getByUser(userId) {
-        return (0, rxjs_1.from)(this.docsRepository.find({ where: { user_id: userId } }));
+        try {
+            return (0, rxjs_1.from)(this.docsRepository.find({ where: { user_id: userId } }));
+        }
+        catch (e) {
+            console.error('DocsDbService.getByUser', e);
+            return null;
+        }
     }
     update(docs) {
-        return (0, rxjs_1.from)(this.docsRepository.update(docs.id, docs));
+        try {
+            return (0, rxjs_1.from)(this.docsRepository.update(docs.id, docs));
+        }
+        catch (e) {
+            console.error('DocsDbService.update', e);
+            return null;
+        }
     }
     delete(id) {
-        return (0, rxjs_1.from)(this.docsRepository.delete(id));
+        try {
+            return (0, rxjs_1.from)(this.docsRepository.delete(id));
+        }
+        catch (e) {
+            console.error('DocsDbService.delete', e);
+            return null;
+        }
     }
     deleteByUserId(user_id) {
-        return (0, rxjs_1.from)(this.docsRepository.delete({ user_id }));
+        try {
+            return (0, rxjs_1.from)(this.docsRepository.delete({ user_id }));
+        }
+        catch (e) {
+            console.error('DocsDbService.deleteByUserId', e);
+            return null;
+        }
     }
 };
 exports.DocsDbService = DocsDbService;

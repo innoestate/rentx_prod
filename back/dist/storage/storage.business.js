@@ -4,7 +4,6 @@ exports.synchronizeFoldersStorage = void 0;
 const storage_utils_1 = require("./utils/storage.utils");
 const synchronizeFoldersStorage = async (prospections, strategy) => {
     const createdFolders = {};
-    console.log('synchronizeFoldersStorage');
     let i = 0;
     while (i < prospections.length) {
         let createdId = await synchronizeProspection(prospections[i], strategy);
@@ -27,18 +26,23 @@ const updateExistingFolder = async (prospection, strategy) => {
         return false;
     }
     const path = (0, storage_utils_1.getProspectionFolderPath)(prospection);
-    const folder = await strategy.getFolder(prospection.storage_folder_id);
-    if (!folder) {
-        return false;
+    try {
+        const folder = await strategy.getFolder(prospection.storage_folder_id);
+        if (!folder) {
+            return false;
+        }
+        else if (folder.path !== path) {
+            await strategy.updateFolderPath(prospection.storage_folder_id, path);
+        }
     }
-    else if (folder.path !== path) {
-        await strategy.updateFolderPath(prospection.storage_folder_id, path);
+    catch (e) {
+        console.error(e);
+        return false;
     }
     return true;
 };
 const createFolder = async (prospection, strategy) => {
     const path = (0, storage_utils_1.getProspectionFolderPath)(prospection);
-    console.log('createFolder', path);
     return await strategy.createFolder('prospections/' + path);
 };
 //# sourceMappingURL=storage.business.js.map

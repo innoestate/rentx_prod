@@ -3,6 +3,7 @@ export declare class Prospection_Entity {
     id: string;
     seller_id: string;
     user_id: string;
+    zip: string;
     city: string;
     status: string;
     address: string;

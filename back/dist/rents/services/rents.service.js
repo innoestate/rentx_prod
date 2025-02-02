@@ -22,7 +22,7 @@ const rent_receipts_business_1 = require("../rent-receipts/rent-receipts.busines
 const rents_db_service_1 = require("./rents.db.service");
 const rents_utils_1 = require("../rents.utils");
 const rents_spreadsheets_business_1 = require("../spreadsheets/rents.spreadsheets.business");
-const spreadsheets_google_strategy_1 = require("../spreadsheets/strategies/spreadsheets.google.strategy");
+const spreadsheets_google_strategy_1 = require("../../spreadsheets/strategies/spreadsheets.google.strategy");
 let RentsService = class RentsService {
     constructor(config, rentsDbService, docsDbService, estateService, ownerService, lodgerService) {
         this.config = config;

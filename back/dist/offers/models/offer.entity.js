@@ -36,7 +36,7 @@ __decorate([
     __metadata("design:type", String)
 ], Offer_Entity.prototype, "google_drive_id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => prospection_entity_1.Prospection_Entity, prospection => prospection.offers),
+    (0, typeorm_1.ManyToOne)(() => prospection_entity_1.Prospection_Entity, prospection => prospection.offers, { onDelete: 'CASCADE' }),
     (0, typeorm_1.JoinColumn)({ name: 'prospection_id' }),
     __metadata("design:type", prospection_entity_1.Prospection_Entity)
 ], Offer_Entity.prototype, "prospection", void 0);

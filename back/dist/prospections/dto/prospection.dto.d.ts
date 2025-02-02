@@ -2,6 +2,7 @@ export interface ProspectionDto {
     user_id: string;
     city?: string;
     address?: string;
+    zip?: string;
     link?: string;
     seller_id?: string;
     status?: PropertyStatus;
@@ -16,3 +17,6 @@ export interface ProspectionDto {
     storage_folder_id?: string;
 }
 export type PropertyStatus = "Unresponsive" | "Contacted" | "Scheduled" | "Visited" | "Abandoned" | "Pending" | "Declined" | "Countered" | "Accepted" | "Validated" | "Signed" | "Completed" | "UnderContract" | "Sold";
+export declare const PropertyStatusTranslation: {
+    [key in PropertyStatus]: string;
+};

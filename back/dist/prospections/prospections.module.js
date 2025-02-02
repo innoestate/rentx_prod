@@ -16,11 +16,14 @@ const user_entity_1 = require("../user/user.entity");
 const user_service_1 = require("../user/user.service");
 const offer_entity_1 = require("../offers/models/offer.entity");
 const prospection_entity_1 = require("./entities/prospection.entity");
-const seller_entity_1 = require("./entities/seller.entity");
+const seller_entity_1 = require("../sellers/models/seller.entity");
 const prospections_controller_1 = require("./prospections.controller");
 const prospections_db_service_1 = require("./services/prospections.db.service");
 const prospections_service_1 = require("./services/prospections.service");
 const sellers_db_service_1 = require("./services/sellers.db.service");
+const docs_db_service_1 = require("../docs/docs.db.service");
+const docs_entity_1 = require("../docs/docs.entity");
+const spreadsheets_prospections_service_1 = require("./spreadsheets/services/spreadsheets.prospections.service");
 let ProspectionsModule = class ProspectionsModule {
 };
 exports.ProspectionsModule = ProspectionsModule;
@@ -33,12 +36,13 @@ exports.ProspectionsModule = ProspectionsModule = __decorate([
                 prospection_entity_1.Prospection_Entity,
                 seller_entity_1.Seller_Entity,
                 offer_entity_1.Offer_Entity,
-                owners_entity_1.Owner_Entity
+                owners_entity_1.Owner_Entity,
+                docs_entity_1.Docs_Entity
             ])
         ],
         controllers: [prospections_controller_1.ProspectionsController],
-        providers: [storage_service_1.StorageService, prospections_service_1.ProspectionsService, prospections_db_service_1.ProspectionsDbService, sellers_db_service_1.SellersDbService, user_service_1.UsersService],
-        exports: [storage_service_1.StorageService, prospections_service_1.ProspectionsService, prospections_db_service_1.ProspectionsDbService, user_service_1.UsersService]
+        providers: [storage_service_1.StorageService, prospections_service_1.ProspectionsService, prospections_db_service_1.ProspectionsDbService, sellers_db_service_1.SellersDbService, docs_db_service_1.DocsDbService, user_service_1.UsersService, spreadsheets_prospections_service_1.SpreadSheetsProspectionsService],
+        exports: [storage_service_1.StorageService, prospections_service_1.ProspectionsService, prospections_db_service_1.ProspectionsDbService, docs_db_service_1.DocsDbService, user_service_1.UsersService, sellers_db_service_1.SellersDbService, spreadsheets_prospections_service_1.SpreadSheetsProspectionsService]
     })
 ], ProspectionsModule);
 //# sourceMappingURL=prospections.module.js.map

@@ -1,9 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.dropAllTables = void 0;
+exports.createUser = exports.emptyingTable = exports.dropAllTables = void 0;
 const pg_1 = require("pg");
 const dropAllTables = async () => {
-    console.log('Dropping all tables in the database...');
     const client = new pg_1.Client({
         host: 'postgres',
         port: 5432,
@@ -37,8 +36,49 @@ const dropAllTables = async () => {
     }
     finally {
         await client.end();
-        console.log('Database connection closed.');
     }
 };
 exports.dropAllTables = dropAllTables;
+const emptyingTable = async (tableName) => {
+    const client = new pg_1.Client({
+        host: 'postgres',
+        port: 5432,
+        user: 'test',
+        password: 'test',
+        database: 'test',
+    });
+    try {
+        await client.connect();
+        await client.query(`DELETE FROM ${tableName};`);
+    }
+    catch (err) {
+        console.error(`Error while emptying table ${tableName}:`, err);
+    }
+    finally {
+        await client.end();
+    }
+};
+exports.emptyingTable = emptyingTable;
+const createUser = async (user) => {
+    const client = new pg_1.Client({
+        host: 'postgres',
+        port: 5432,
+        user: 'test',
+        password: 'test',
+        database: 'test',
+    });
+    try {
+        await client.connect();
+        const user_ = await client.query(`INSERT INTO users (email, name) VALUES ($1, $2)`, [user.email, user.name]);
+        console.log('user', user);
+        return user_;
+    }
+    catch (err) {
+        console.error(`Error while creating user:`, err);
+    }
+    finally {
+        await client.end();
+    }
+};
+exports.createUser = createUser;
 //# sourceMappingURL=db.utils.js.map

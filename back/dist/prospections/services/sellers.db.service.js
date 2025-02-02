@@ -16,7 +16,7 @@ exports.SellersDbService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
-const seller_entity_1 = require("../entities/seller.entity");
+const seller_entity_1 = require("../../sellers/models/seller.entity");
 let SellersDbService = class SellersDbService {
     constructor(sellerRepository) {
         this.sellerRepository = sellerRepository;

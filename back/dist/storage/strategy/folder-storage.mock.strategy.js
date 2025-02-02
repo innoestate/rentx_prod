@@ -7,10 +7,8 @@ class FolderStorageMockedStrategy extends folder_storage_strategy_1.FolderStorag
         super();
         this.folders = new Map();
         this.files = new Map();
-        console.log('constructor mocked storage strategy');
     }
     async createFolder(path) {
-        console.log('create folder from mocked strategy');
         const id = Date.now().toString();
         this.folders.set(id, { id, path });
         return Promise.resolve(id);
