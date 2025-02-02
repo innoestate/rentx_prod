@@ -12,6 +12,7 @@ async def addProspection(document, barer_token):
     # Parse the document to extract the necessary fields
     prospection_data = {
         'city': document.get('city'),
+        'zip': document.get('zip', None),
         'address': '',
         'link': document.get('link', None),
         'seller_id': document.get('seller_id', None),
@@ -27,6 +28,7 @@ async def addProspection(document, barer_token):
 
     # Set default values for required fields if they are None
     prospection_data['city'] = prospection_data.get('city', '')
+    prospection_data['zip'] = prospection_data.get('zip', '')
     prospection_data['address'] = prospection_data.get('address', '')
     prospection_data['price'] = prospection_data.get('price', 0)
 

@@ -6,3 +6,6 @@ async def addUserViewSummarize(user_id, summarize_long, summarize_short):
 
 async def getLastUserViewSummarize(user_id):
     return await DataFetcher.get_last_prospector_ai_view_summarize(user_id)
+
+async def resetUserViewSummarize(user_id):
+    return await DataFetcher.reset_prospector_ai_view_summarize(user_id)

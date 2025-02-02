@@ -196,6 +196,23 @@ class DataFetcher:
             print(f"Error retrieving last entry from prospector_ai_view_summarize: {e}")
             return None
 
+    async def reset_prospector_ai_view_summarize(user_id: str):
+        """Reset the prospector_ai_view_summarize table for the given user_id."""
+        instance = DataFetcher.get_instance()
+        if instance.connection is None:
+            DataFetcher.connect()
+        try:
+            with instance.connection.cursor() as cursor:
+                query = sql.SQL('''
+                    DELETE FROM prospector_ai_view_summarize
+                    WHERE user_id = %(user_id)s
+                ''')
+                cursor.execute(query, {'user_id': user_id})
+                instance.connection.commit()
+        except psycopg2.Error as e:
+            print(f"Error resetting prospector_ai_view_summarize: {e}")
+            instance.connection.rollback()
+
     @staticmethod
     async def fetch_owner_by_id(owner_id: str):
         """Fetch an owner by their ID"""
@@ -259,3 +276,46 @@ class DataFetcher:
         except psycopg2.Error as e:
             print(f"Error fetching first owner with user_id {user_id}: {e}")
             return None
+
+    def get_user_tokens(user_id: str):
+        """Return the number of tokens for the given user_id from the prospector_tokens table"""
+        instance = DataFetcher.get_instance()
+        if instance.connection is None:
+            DataFetcher.connect()
+        try:
+            with instance.connection.cursor() as cursor:
+                query = sql.SQL('SELECT tokens FROM prospector_tokens WHERE user_id = %s')
+                cursor.execute(query, (user_id,))
+                result = cursor.fetchone()
+                return result[0] if result else 0
+        except psycopg2.Error as e:
+            print(f"Error retrieving tokens for user_id {user_id}: {e}")
+            return 0
+
+    def use_user_tokens(user_id: str, tokens_to_use: int):
+        """Consume a specified number of tokens for the given user_id from the prospector_tokens table"""
+        instance = DataFetcher.get_instance()
+        if instance.connection is None:
+            DataFetcher.connect()
+        try:
+            with instance.connection.cursor() as cursor:
+                # Check current tokens
+                cursor.execute(sql.SQL('SELECT tokens FROM prospector_tokens WHERE user_id = %s'), (user_id,))
+                current_tokens = cursor.fetchone()
+
+                if current_tokens and current_tokens[0] >= tokens_to_use:
+                    # Deduct tokens
+                    cursor.execute(sql.SQL('''
+                        UPDATE prospector_tokens
+                        SET tokens = tokens - %s
+                        WHERE user_id = %s
+                    '''), (tokens_to_use, user_id))
+                    instance.connection.commit()
+                    return True
+                else:
+                    print(f"Insufficient tokens for user_id {user_id}")
+                    return False
+        except psycopg2.Error as e:
+            print(f"Error using tokens for user_id {user_id}: {e}")
+            instance.connection.rollback()
+            return False

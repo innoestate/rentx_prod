@@ -17,6 +17,8 @@ from services.pdf_service import create_pdf
 from services.html_service import setHeader
 from services.html_service import addBuyerSignature
 from services.offer_service import callAddOfferRentxApi
+from data.data_ai_view_summarize import resetUserViewSummarize
+from services.tokens_service import getUserTokens
 
 app = FastAPI()
 
@@ -59,8 +61,6 @@ async def add_Estate(request: Request, _ = Depends(jwt_middleware)):
 
     return {"status": "success", "body": 'ok'}
 
-
-
 @app.post("/prospector/api/ai/configuration")
 async def ai_configuration(request: Request, _ = Depends(jwt_middleware)):
 
@@ -78,14 +78,13 @@ async def ai_configuration(request: Request, _ = Depends(jwt_middleware)):
     message = await addViewMessageInHistory(user_id, userPrompt)
     lastSummarize = await getLastUserViewSummarize(user_id)
     if lastSummarize is not None and lastSummarize[2] is not None:
-        summaries = summarizeUserView(message, lastSummarize[2])
+        summaries = summarizeUserView(user_id, message, lastSummarize[2])
         await addUserViewSummarize(user_id, summaries['summarize_long'], summaries['summarize_short'])
     else:
         summarizeUserView(message, '')
         await addUserViewSummarize(user_id, '', '')
 
     return {"status": "success", "body": message}
-
 
 @app.get("/prospector/api/ai/configuration")
 async def get_ai_configuration(request: Request, _ = Depends(jwt_middleware)):
@@ -97,6 +96,15 @@ async def get_ai_configuration(request: Request, _ = Depends(jwt_middleware)):
     else:
         raise HTTPException(status_code=404, detail="No summaries found for the user.")
 
+@app.get("/prospector/api/ai/configuration/reset")
+async def reset_ai_configuration(request: Request, _ = Depends(jwt_middleware)):
+    print('reset ai configuration')
+    user_id = DataFetcher.get_user_id(request.state.user_data.get('email'))
+    result = await resetUserViewSummarize(user_id)
+    if result:
+        return {"summarize_short": '', "summarize_long": ''}
+    else:
+        raise HTTPException(status_code=404, detail="No summaries found for the user.")
 
 @app.post("/prospector/api/ai/generate_offer")
 async def generate_offer(request: Request, _ = Depends(jwt_middleware)):
@@ -122,7 +130,7 @@ async def generate_offer(request: Request, _ = Depends(jwt_middleware)):
         seller_id = prospection_details.get('seller_id')
         seller = await getSeller(seller_id)
         userSummarize = await getLastUserViewSummarize(user_id)
-        offerHtml = generateOffer(owner, prospection_details, userSummarize[2], priceWanted, instructions)
+        offerHtml = generateOffer(user_id, owner, prospection_details, userSummarize[2], priceWanted, instructions)
         if not prospection_details:
             raise HTTPException(status_code=404, detail="Prospection not found")
 
@@ -145,3 +153,9 @@ async def generate_offer(request: Request, _ = Depends(jwt_middleware)):
         return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/prospector/api/ai/tokens")
+async def get_user_tokens(request: Request, _ = Depends(jwt_middleware)):
+    user_id = DataFetcher.get_user_id(request.state.user_data.get('email'))
+    tokens = getUserTokens(user_id)
+    return {"tokens": tokens}

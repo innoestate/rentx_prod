@@ -3,12 +3,14 @@ from openai import OpenAI
 import os
 import json
 import time
+from services.tokens_service import getUserTokens, useUserTokens
 
 key = os.getenv('OPENAI_API_KEY')
 client = OpenAI(api_key=key)
 
 class estateExtraction(BaseModel):
     description: str
+    zip: str
     city: str
     price: int
     surface: str
@@ -19,8 +21,13 @@ class estateExtraction(BaseModel):
     seller_mail: str
     seller_phone: str
 
-def extract_text(text):
+def extract_text(user_id, text):
     try:
+
+        tokens = getUserTokens(user_id)
+        if tokens <= 0:
+            raise Exception("No tokens left")
+
         completion = client.beta.chat.completions.parse(
             model="gpt-4o-2024-08-06",
             messages=[
@@ -29,6 +36,8 @@ def extract_text(text):
             ],
             response_format=estateExtraction,
         )
+        useUserTokens(user_id, completion.usage.total_tokens)
+
         return json.loads(completion.choices[0].message.content)
     except openai.error.RateLimitError as e:
         print("Rate limit exceeded. Retrying after a short delay...")
@@ -37,7 +46,7 @@ def extract_text(text):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-def summarizeUserView(message, previusSummary = None):  
+def summarizeUserView(user_id, message, previusSummary = None):  
     """
     Summarizes the user's view based on the provided message.
 
@@ -49,6 +58,11 @@ def summarizeUserView(message, previusSummary = None):
     """
     try:
         print('message content', message['content'])
+
+        tokens = getUserTokens(user_id)
+        if tokens <= 0:
+            raise Exception("No tokens left")
+
         completion = client.beta.chat.completions.parse(
             model="gpt-4o-2024-08-06",
             max_tokens=1024,
@@ -69,22 +83,31 @@ def summarizeUserView(message, previusSummary = None):
         )
         summary_short = completion2.choices[0].message.content
 
+        useUserTokens(user_id, completion.usage.total_tokens)
+
+
         return {'summarize_long': summary_long, 'summarize_short': summary_short}
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
 
-def generateOffer(owner, prospection_details, userSummary, priceWanted, instructions):
+def generateOffer(user_id, owner, prospection_details, userSummary, priceWanted, instructions):
     try:
         
+        tokens = getUserTokens(user_id)
+        if tokens <= 0:
+            raise Exception("No tokens left")
+
         ownerName = owner.get('name', '')
         description = prospection_details.get('resume', '')
         address = prospection_details.get('address', '')
         city = prospection_details.get('city', '')
+        zip = prospection_details.get('zip', '')
         price = str(prospection_details.get('price', 0))
         instructionString = ''
         if instructions:
             instructionString = 'Je tiens à préciser que: ' + instructions
+
 
 
         completion = client.beta.chat.completions.parse(
@@ -93,7 +116,7 @@ def generateOffer(owner, prospection_details, userSummary, priceWanted, instruct
             messages=[
                 {"role": "system", "content": "You are an expert at generating offers for real estate."},
                 {"role": "user", "content": "Créez une offre d'achat en mon nom: " + ownerName + " pour le bien suivant dont voici la description: " 
-                            + description + "qui est proposé au prix de" + price + " dans la ville de " + city + " et se situe a l'adresse suivante: " + address
+                            + description + "qui est proposé au prix de" + price + ". Voici l'adresse du bien: " + address + ", " + zip + " " + city
                             + " basé sur le profil de l'utilisateur suivant: " + userSummary 
                             + ". L'offre est faite au prix de: " + str(priceWanted) + "."
                             + "Ne fournissez que le contenu textuel de l'offre avec la meilleur argumentation possible." 
@@ -105,6 +128,9 @@ def generateOffer(owner, prospection_details, userSummary, priceWanted, instruct
                             }
             ],
         )
+
+        useUserTokens(user_id, completion.usage.total_tokens)
+
         return completion.choices[0].message.content.split("<!DOCTYPE html>")[1].strip().strip("```")
 
     except Exception as e:

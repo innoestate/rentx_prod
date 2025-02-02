@@ -11,9 +11,9 @@ def setHeader(htmlText, buyer, seller):
     phone_text = f"<br>{buyer_phone}" if buyer_phone else ""
 
     seller_name = seller['name']
-    # seller_city = seller['city']
-    # seller_zip = seller['zip']
     seller_address = seller['address']
+    seller_city = seller['city']
+    seller_zip = seller['zip']
     seller_email = seller['email']
     seller_phone = seller.get('phone', None)
     seller_agency = seller.get('agency', None)
@@ -40,6 +40,7 @@ def setHeader(htmlText, buyer, seller):
                                 {seller_name}
                                 {seller_agency_text}
                                 <br>{seller_address}
+                                <br>{seller_zip} {seller_city}
                                 {seller_email_text}
                                 {seller_phone_text}
                             </p>
