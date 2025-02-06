@@ -62,12 +62,13 @@ class SpreadSheetGoogleStrategy extends spreadsheets_strategy_1.SpreadSheetStrat
         return null;
     }
     async createSpreadSheet(title) {
+        console.log('createSpreadSheet', title);
         try {
             const sheets = googleapis_1.google.sheets('v4');
             const request = {
                 resource: {
                     properties: {
-                        title,
+                        title
                     },
                 },
                 auth: this.oauth2Client,

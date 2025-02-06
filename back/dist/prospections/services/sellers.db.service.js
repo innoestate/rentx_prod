@@ -22,8 +22,14 @@ let SellersDbService = class SellersDbService {
         this.sellerRepository = sellerRepository;
     }
     async createSeller(createSellerDto) {
-        const seller = this.sellerRepository.create(createSellerDto);
-        return this.sellerRepository.save(seller);
+        try {
+            const seller = this.sellerRepository.create(createSellerDto);
+            return this.sellerRepository.save(seller);
+        }
+        catch (e) {
+            console.error(e);
+            throw new common_1.NotFoundException(`Fail to create Seller`);
+        }
     }
     async removeSeller(id) {
         try {

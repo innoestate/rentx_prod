@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const spreadsheets_utils_1 = require("../../../spreadsheets/spreadsheets.utils");
 const spreadsheets_mocked_strategy_1 = require("../../../spreadsheets/strategies/spreadsheets.mocked.strategy");
-const spreadsheets_prospection_utils_1 = require("../spreadsheets.prospection.utils");
+const spreadsheets_prospection_utils_1 = require("../utils/spreadsheets.prospection.utils");
 const prospections_mocked_1 = require("./mocks/prospections.mocked");
 const sellers_mocked_1 = require("./mocks/sellers.mocked");
 describe('test spreadsheets prospections utils', () => {

@@ -19,7 +19,7 @@ const spreadsheets_mocked_strategy_1 = require("../../../spreadsheets/strategies
 const prospections_utils_1 = require("../../prospections.utils");
 const prospections_db_service_1 = require("../../services/prospections.db.service");
 const sellers_db_service_1 = require("../../services/sellers.db.service");
-const spreadsheets_prospection_business_1 = require("../../spreadsheets/spreadsheets.prospection.business");
+const spreadsheets_prospection_business_1 = require("../business/spreadsheets.prospection.business");
 let SpreadSheetsProspectionsService = class SpreadSheetsProspectionsService {
     constructor(ProspectionsDbService, sellersServicer, docsServices, configService) {
         this.ProspectionsDbService = ProspectionsDbService;

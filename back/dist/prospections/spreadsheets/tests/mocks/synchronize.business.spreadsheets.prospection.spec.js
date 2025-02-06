@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const spreadsheets_mocked_strategy_1 = require("../../../../spreadsheets/strategies/spreadsheets.mocked.strategy");
-const spreadsheets_prospection_business_1 = require("../../spreadsheets.prospection.business");
+const spreadsheets_prospection_business_1 = require("../../business/spreadsheets.prospection.business");
 const prospections_mocked_1 = require("./prospections.mocked");
 const sellers_mocked_1 = require("./sellers.mocked");
 describe('test spreadsheets synchronization business', () => {

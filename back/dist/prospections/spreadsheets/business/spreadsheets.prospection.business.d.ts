@@ -1,0 +1,11 @@
+import { SpreadSheetStrategy } from "../../../spreadsheets/strategies/spreadsheets.strategy";
+import { ProspectionDb } from "../../dto/prospection.db";
+import { SellerDb } from "src/sellers/models/seller.db";
+import { SpreadSheet } from "src/spreadsheets/models/spreadsheets.model";
+import { ProspectionBuilded } from "../../dto/prospection.builded";
+export declare const synchronizeProspections: (spreadSheetStrategy: SpreadSheetStrategy, prospections: ProspectionDb[], sellers: SellerDb[], spreadSheetId?: string) => Promise<SpreadSheet>;
+export declare const createProspectionsSpreadsheet: (spreadSheetStrategy: SpreadSheetStrategy, title: string) => Promise<SpreadSheet>;
+export declare const addProspectionsSpreadsheet: (spreadSheetStrategy: SpreadSheetStrategy, spreadSheetId: string, prospections: ProspectionDb[], sellers: SellerDb[]) => Promise<SpreadSheet>;
+export declare const updateProspectionsSpreadsheet: (spreadSheetStrategy: SpreadSheetStrategy, spreadSheetId: string, prospections: ProspectionBuilded[]) => Promise<SpreadSheet>;
+export declare const updateSellersSpreadsheet: (spreadSheetStrategy: SpreadSheetStrategy, spreadSheetId: string, sellers: SellerDb[]) => Promise<SpreadSheet>;
+export declare const removeProspectionsSpreadsheet: (spreadSheetStrategy: SpreadSheetStrategy, spreadSheetId: string, prospections: ProspectionDb[]) => Promise<SpreadSheet>;
