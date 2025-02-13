@@ -18,6 +18,7 @@ const user_mock_1 = require("./mocks/user.mock");
 const prospection_spreadsheets_tests_1 = require("./prospections/prospection.spreadsheets-tests");
 const db_utils_1 = require("./utils/db.utils");
 const user_utils_1 = require("./utils/user.utils");
+const alpha_users_1 = require("./e2e/alpha-users");
 describe('/api', () => {
     let app;
     let user;
@@ -38,6 +39,7 @@ describe('/api', () => {
         await app.close();
         await (0, db_utils_1.dropAllTables)();
     });
+    (0, alpha_users_1.alphaUserTests)(() => app);
     (0, prospection_spreadsheets_tests_1.prospectionsSpreadsheetTests)(() => app, () => user, () => docsDbService);
     (0, estates_tests_1.estateTests)(() => app, () => user, () => estateService);
     (0, user_tests_1.userTests)(() => app, () => user);

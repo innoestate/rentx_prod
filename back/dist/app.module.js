@@ -25,6 +25,7 @@ const rents_module_1 = require("./rents/rents.module");
 const prospections_module_1 = require("./prospections/prospections.module");
 const create_datasource_script_1 = require("./scripts/create-datasource.script");
 const offers_module_1 = require("./offers/offers.module");
+const alphaUsers_module_1 = require("./alphaUsers/alphaUsers.module");
 const bodyParser = require("body-parser");
 let AppModule = class AppModule {
     constructor() {
@@ -52,6 +53,7 @@ exports.AppModule = AppModule = __decorate([
             rents_module_1.RentsModule,
             prospections_module_1.ProspectionsModule,
             offers_module_1.OffersModule,
+            alphaUsers_module_1.AlphaUsersModule,
             typeorm_1.TypeOrmModule.forRootAsync({
                 imports: [config_1.ConfigModule],
                 useClass: typeorm_service_1.TypeOrmConfigService,
